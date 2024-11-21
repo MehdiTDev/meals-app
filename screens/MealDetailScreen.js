@@ -1,38 +1,37 @@
-import {
-  Text,
-  StyleSheet,
-  View,
-  Image,
-  ScrollView,
-  Button,
-} from "react-native";
-import { useContext, useLayoutEffect } from "react";
+import { Text, StyleSheet, View, Image, ScrollView } from "react-native";
+import { useLayoutEffect } from "react";
 
 import { MEALS } from "../data/dummy-data";
 import MealDetails from "../components/MealDetails";
 import Subtitle from "../components/MealDetail/Subtitle";
 import List from "../components/MealDetail/List";
 import IconButton from "../components/IconButton";
-import { FavoritesContext } from "../store/context/favorites-context";
-// import FavoritesContext from "../store/context/favorites-context";
+import { useDispatch, useSelector } from "react-redux";
+import { addFavorite, removeFavorite } from "../store/redux/favorites";
 
 function MealDetailScreen({ route, navigation }) {
-  const favoriteMealsCtx = useContext(FavoritesContext);
+  // Access the Redux state
+  const favoriteMealIds = useSelector(
+    (state) => state.favoriteMeals?.ids || []
+  ); // Corrected key
 
+  const dispatch = useDispatch();
   const mealId = route.params.mealId;
 
   const selectedMeal = MEALS.find((meal) => meal.id === mealId);
 
-  const mealIsFavorite = favoriteMealsCtx.ids.includes(mealId);
+  // Check if the meal is already a favorite
+  const mealIsFavorite = favoriteMealIds.includes(mealId);
 
   function changeFavoriteStatusHandler() {
     if (mealIsFavorite) {
-      favoriteMealsCtx.removeFavorite(mealId);
+      dispatch(removeFavorite({ id: mealId }));
     } else {
-      favoriteMealsCtx.addFavorite(mealId);
+      dispatch(addFavorite({ id: mealId }));
     }
   }
 
+  // Update the header icon dynamically
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {
@@ -45,7 +44,8 @@ function MealDetailScreen({ route, navigation }) {
         );
       },
     });
-  }, [navigation, changeFavoriteStatusHandler]);
+  }, [navigation, mealIsFavorite]); // Fixed dependency array
+
   return (
     <ScrollView style={styles.rootContainer}>
       <Image style={styles.image} source={{ uri: selectedMeal.imageUrl }} />
@@ -58,7 +58,7 @@ function MealDetailScreen({ route, navigation }) {
       />
       <View style={styles.listOuterContainer}>
         <View style={styles.listContainer}>
-          <Subtitle>ingredients</Subtitle>
+          <Subtitle>Ingredients</Subtitle>
           <List data={selectedMeal.ingredients} />
           <Subtitle>Steps</Subtitle>
           <List data={selectedMeal.steps} />
