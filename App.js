@@ -23,6 +23,7 @@ function DrawerNavigator() {
         drawerInactiveTintColor: "white",
         drawerActiveTintColor: "#351401",
         drawerActiveBackgroundColor: "#e4baa1",
+        contentContainerStyle: { backgroundColor: "#3f2f25" },
       }}
     >
       <Drawer.Screen
@@ -71,9 +72,7 @@ export default function App() {
           <Stack.Screen
             name="MealDetail"
             component={MealDetailScreen}
-            options={{
-              title: "About the meal",
-            }}
+            options={{ title: "About the meal" }}
           />
         </Stack.Navigator>
       </NavigationContainer>
@@ -81,6 +80,4 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {},
-});
+const styles = StyleSheet.create({});
