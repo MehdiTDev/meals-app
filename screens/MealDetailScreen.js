@@ -13,7 +13,8 @@ import MealDetails from "../components/MealDetails";
 import Subtitle from "../components/MealDetail/Subtitle";
 import List from "../components/MealDetail/List";
 import IconButton from "../components/IconButton";
-import FavoritesContext from "../store/context/favorites-context";
+import { FavoritesContext } from "../store/context/favorites-context";
+// import FavoritesContext from "../store/context/favorites-context";
 
 function MealDetailScreen({ route, navigation }) {
   const favoriteMealsCtx = useContext(FavoritesContext);
